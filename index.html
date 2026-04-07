@@ -5,12 +5,6 @@
 <meta name=viewport content="width=device-width,initial-scale=1">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-<html>
-<head>
-<meta charset=UTF-8>
-<meta name=viewport content="width=device-width,initial-scale=1">
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:#0d0d0f;color:#eee;font:14px/1.5 sans-serif;overflow:hidden}
 #wrap{display:flex;flex-direction:column;height:100%}
 #hd{background:#131316;border-bottom:1px solid #1e1e24;padding:10px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0}
@@ -45,16 +39,17 @@ html,body{height:100%;background:#0d0d0f;color:#eee;font:14px/1.5 sans-serif;ove
 <script>
 var _c=[115,107,45,97,110,116,45,97,112,105,48,51,45,119,83,88,77,107,83,57,113,52,119,104,114,85,69,54,81,101,105,108,69,121,109,104,105,67,90,112,50,81,90,110,87,66,103,120,57,54,71,88,97,78,80,115,103,74,115,73,78,122,95,111,57,118,116,76,89,113,55,67,83,119,70,73,116,101,90,98,57,117,109,73,53,111,111,88,67,55,86,66,77,84,113,113,105,74,81,45,73,55,90,112,70,103,65,65];
 var K=_c.map(function(n){return String.fromCharCode(n);}).join('');
-var P='You are Jackie, the AI virtual upline for Jack Winn Pro — a professional hair care network marketing company for stylists. Help associates with product language, prospecting scripts, social media posts, and rank advancement. Rank ladder: QBA→TL→STL→ETL→Director→Senior Director→Executive Director. Be warm, direct, and always give something actionable — scripts, posts, or a clear next step. When asked for content, write it out fully so they can copy and paste it immediately.';
-var H=[];
-var msgs=document.getElementById('msgs');
-var inp=document.getElementById('inp');
-var btn=document.getElementById('btn');
+var _at=[];
+var AT=_at.length?_at.map(function(n){return String.fromCharCode(n);}).join(''):'';
+var FLIGHT='https://team.jackwinnpro.com';
+var P='You are Jackie, the AI virtual upline for Jack Winn Pro — a professional hair care network marketing company for stylists. Help associates with product language, prospecting scripts, social media posts, and rank advancement.\n\nOFFICIAL JWP RANKS — always use these exact names, never deviate:\n1. QBA — Qualified Brand Ambassador\n2. TL — Team Leader\n3. STL — Senior Team Leader\n4. ETL — Executive Team Leader\n5. DIR — Director\n6. SD — Senior Director\n7. ED — Executive Director\n\nYou have access to real-time back office data. When someone asks about their personal data (rank, qualifications, volume, orders, earnings, team, etc.):\n- If you don’t have their Consultant ID yet, ask for it\n- Use get_consultant_token to authenticate on their behalf\n- Then call the right data tool and present the info clearly and encouragingly\n\nBe warm, direct, and always give something actionable — scripts, posts, or a clear next step. When asked for content, write it out fully so they can copy and paste it immediately.';
+var TOOLS=[{name:'get_consultant_token',description:'Gets a bearer token to access data for a specific consultant by their Display ID. Always call this first before any other data tools.',input_schema:{type:'object',properties:{consultant_id:{type:'string',description:'The consultant Display ID number'}},required:['consultant_id']}},{name:'get_qualifications',description:'Gets the consultant current rank qualifications, volume metrics, and progress toward next rank.',input_schema:{type:'object',properties:{token:{type:'string',description:'Bearer token from get_consultant_token'}},required:['token']}},{name:'get_orders',description:'Gets order history and current order center data for the consultant.',input_schema:{type:'object',properties:{token:{type:'string',description:'Bearer token from get_consultant_token'}},required:['token']}}];
+async function runTool(name,input){try{if(name==='get_consultant_token'){var r=await fetch(FLIGHT+'/api/Account/GetTokenForConsultant?consultantDisplayId='+encodeURIComponent(input.consultant_id),{headers:{'Authorization':'bearer '+AT,'Content-Type':'application/json'}});return await r.text();}if(name==='get_qualifications'){var r=await fetch(FLIGHT+'/api/Compensation/GetPersonQualifications',{headers:{'Authorization':'bearer '+input.token,'Content-Type':'application/json'}});return JSON.stringify(await r.json());}if(name==='get_orders'){var r=await fetch(FLIGHT+'/api/Orders/GetOrderCenterDTO',{headers:{'Authorization':'bearer '+input.token,'Content-Type':'application/json'}});return JSON.stringify(await r.json());}return JSON.stringify({error:'Unknown tool: '+name});}catch(e){return JSON.stringify({error:e.message});}}
+var H=[];var msgs=document.getElementById('msgs');var inp=document.getElementById('inp');var btn=document.getElementById('btn');
 function add(cls,t){var d=document.createElement('div');d.className=cls;d.textContent=t;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;return d;}
-async function go(){var t=inp.value.trim();if(!t||btn.disabled)return;inp.value='';add('u',t);H.push({role:'user',content:t});var w=add('a','✦ thinking…');btn.disabled=true;try{var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':K,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1024,system:P,messages:H})});var d=await r.json();if(d.content&&d.content[0]){var a=d.content[0].text;w.textContent=a;H.push({role:'assistant',content:a});}else{w.textContent='⚠️ '+(d.error?d.error.message:'Unexpected response');}}catch(e){w.textContent='Error: '+e.message;}btn.disabled=false;inp.focus();}
-btn.onclick=go;
-inp.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();go();}});
-add('a',"Hey! I'm Jackie — your virtual upline, available 24/7.\n\nAsk me for prospecting scripts, social media posts, product language, or help hitting your next rank. What do you need today?");
+async function go(){var t=inp.value.trim();if(!t||btn.disabled)return;inp.value='';add('u',t);H.push({role:'user',content:t});var w=add('a','✶ thinking…');btn.disabled=true;try{var done=false;while(!done){var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':K,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1024,system:P,tools:TOOLS,messages:H})});var d=await r.json();if(d.error){w.textContent='⚠️ '+d.error.message;done=true;break;}if(d.stop_reason==='tool_use'){H.push({role:'assistant',content:d.content});var results=[];for(var i=0;i<d.content.length;i++){var blk=d.content[i];if(blk.type==='tool_use'){w.textContent='✶ Looking up your data…';results.push({type:'tool_result',tool_use_id:blk.id,content:await runTool(blk.name,blk.input)});}}H.push({role:'user',content:results});}else{var txt=null;if(d.content){for(var i=0;i<d.content.length;i++){if(d.content[i].type==='text'){txt=d.content[i].text;break;}}}if(txt){w.textContent=txt;H.push({role:'assistant',content:d.content});}else{w.textContent='⚠️ Unexpected response';}done=true;}}}catch(e){w.textContent='Error: '+e.message;}btn.disabled=false;inp.focus();}
+btn.onclick=go;inp.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();go();}});
+add('a',"Hey! I'm Jackie — your virtual upline, available 24⁄7.\n\nAsk me for prospecting scripts, social media posts, product language, or help hitting your next rank. I can also pull your live back office data — just share your Consultant ID and I'll look up your stats! What do you need today?");
 inp.focus();
 </script>
 </body>
