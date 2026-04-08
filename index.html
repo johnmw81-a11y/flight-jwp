@@ -23,106 +23,35 @@ html,body{height:100%;background:#0d0d0f;color:#eee;font:14px/1.5 sans-serif;ove
 </head>
 <body>
 <div id=wrap>
-<div id=hd>
-  <div id=ic>&#10022;</div>
-  <div>
-    <div id=nm>JACKIE</div>
-    <div id=sb>JACK WINN PRO &middot; VIRTUAL UPLINE</div>
+  <div id=hd>
+    <div id=ic>&#10022;</div>
+    <div>
+      <div id=nm>JACKIE</div>
+      <div id=sb>JACK WINN PRO &middot; VIRTUAL UPLINE</div>
+    </div>
+  </div>
+  <div id=msgs></div>
+  <div id=bar>
+    <input id=inp placeholder="Ask Jackie anything…" autocomplete=off>
+    <button id=btn>&#8593;</button>
   </div>
 </div>
-<div id=msgs></div>
-<div id=bar>
-  <input id=inp placeholder="Ask Jackie anything…" autocomplete=off>
-  <button id=btn>&#8593;</button>
-</div>
-</div>
 <script>
-// ---- Anthropic API key (char codes) ----
 var _c=[115,107,45,97,110,116,45,97,112,105,48,51,45,119,83,88,77,107,83,57,113,52,119,104,114,85,69,54,81,101,105,108,69,121,109,104,105,67,90,112,50,81,90,110,87,66,103,120,57,54,71,88,97,78,80,115,103,74,115,73,78,122,95,111,57,118,116,76,89,113,55,67,83,119,70,73,116,101,90,98,57,117,109,73,53,111,111,88,67,55,86,66,77,84,113,113,105,74,81,45,73,55,90,112,70,103,65,65];
 var K=_c.map(function(n){return String.fromCharCode(n);}).join('');
-
-// ---- Cloudflare Worker URL ----
-// After deploying flight-worker.js, paste the Worker URL here.
-// Example: 'https://flight-proxy.yourname.workers.dev'
 var WORKER='https://flight-proxy.jack-ffc.workers.dev';
-
-// ---- System prompt ----
-var P='You are Jackie, the AI virtual upline for Jack Winn Pro \u2014 a professional hair care network marketing company for stylists. Help associates with product language, prospecting scripts, social media posts, and rank advancement.\n\nOFFICIAL JWP RANKS \u2014 always use these exact names, never deviate:\n1. QBA \u2014 Qualified Brand Ambassador\n2. TL \u2014 Team Leader\n3. STL \u2014 Senior Team Leader\n4. ETL \u2014 Executive Team Leader\n5. DIR \u2014 Director\n6. SD \u2014 Senior Director\n7. ED \u2014 Executive Director\n\nYou have access to real-time back office data via the get_consultant_data tool. When someone asks about their personal data (rank, qualifications, volume, orders, earnings, team, etc.):\n- If you don\u2019t have their Consultant ID yet, ask for it\n- Call get_consultant_data with data_type="qualifications" to see rank progress and volumes\n- Call get_consultant_data with data_type="metrics" to see performance metrics\n- Call get_consultant_data with data_type="compensation" to see earnings breakdown\n- Present the info clearly, encouragingly, and with a clear next step\n\nBe warm, direct, and always give something actionable \u2014 scripts, posts, or a clear next step. When asked for content, write it out fully so they can copy and paste it immediately.';
-
-// ---- Tool definition ----
-var TOOLS=[
-  {
-    name:'get_consultant_data',
-    description:'Fetches live back office data for a consultant by their Display ID. Use data_type="qualifications" for rank progress and volume, "metrics" for performance stats, "compensation" for earnings breakdown.',
-    input_schema:{
-      type:'object',
-      properties:{
-        consultant_id:{type:'string',description:'The consultant Display ID number (e.g. "1042")'},
-        data_type:{type:'string',enum:['qualifications','metrics','compensation'],description:'Which type of data to fetch'}
-      },
-      required:['consultant_id','data_type']
-    }
-  }
-];
-
-// ---- Tool execution ----
-async function runTool(name,input){
-  try{
-    if(name==='get_consultant_data'){
-      if(!WORKER) return JSON.stringify({error:'Back office connection not yet configured. Tell the user: "I can see your question but my live data connection isn\'t active yet \u2014 your upline is setting it up. In the meantime I\'m happy to help with scripts, content, or rank strategy!"'});
-      var endpoint=(['qualifications','metrics','compensation'].indexOf(input.data_type)>=0)?input.data_type:'qualifications';
-      var r=await fetch(WORKER+'/'+endpoint+'?displayID='+encodeURIComponent(input.consultant_id));
-      if(!r.ok){
-        var err;try{err=await r.json();}catch(x){err={error:'HTTP '+r.status};}
-        return JSON.stringify(err);
-      }
-      return JSON.stringify(await r.json());
-    }
-    return JSON.stringify({error:'Unknown tool: '+name});
-  }catch(e){return JSON.stringify({error:e.message});}
-}
-
-// ---- Chat logic ----
+var P='You are Jackie, the AI virtual upline for Jack Winn Pro — a professional hair care network marketing company for stylists. You speak warmly, personally, and encouragingly — like a supportive upline who genuinely cares and knows the numbers.\n\nTONE: Warm and casual like a text from a friend who happens to know your back office inside and out. Use first names. Be specific with numbers. Be encouraging but real. Give clear, actionable next steps. End with energy and support.\n\nOFFICIAL JWP RANKS — always use these exact names, never deviate:\n1. QBA — Qualified Brand Ambassador\n2. TL — Team Leader\n3. STL — Senior Team Leader\n4. ETL — Executive Team Leader\n5. DIR — Director\n6. SD — Senior Director\n7. ED — Executive Director\n\nRANK REQUIREMENTS (approximate, use for coaching):\n- QBA: 100 PQV/month personal\n- TL: 200 PQV + 1 qualified stylist\n- STL: 300 PQV + 2 qualified stylists\n- ETL: 400 PQV + 3 qualified stylists + team volume\n- DIR: 500 PQV + 4 qualified stylists + team volume\n- SD: Director + promoted Director downline\n- ED: Senior Director + team criteria\n\nTOOLS AVAILABLE:\n- get_consultant_data with data_type="qualifications" → rank, status, enrollees, order activity\n- get_consultant_data with data_type="metrics" → performance metrics\n- get_consultant_data with data_type="compensation" → full earnings history\n- get_consultant_data with data_type="stats" → THE MOST USEFUL: current PQV, last month PQV, team volume by level, pay rank, qualified stylists, car bonus eligibility, AND last month actual earnings\n\nWHEN TO USE STATS:\n- Any question about rank progress, volumes, hitting next rank, how they are doing → call stats first\n- pqvLastMonth = their Personal Qualifying Volume last completed month\n- personalQV = their PQV so far THIS month (in-progress)\n- teamVolume = their total team volume this period\n- lastMonthPay.grossPay = what they actually earned last month\n\nCOACHING FORMAT (when you have their stats):\n1. Celebrate what they did last month with their real numbers\n2. Show exactly where they are right now this month\n3. Tell them specifically what they need to do to hit their next rank with the actual gap\n4. Give one clear action to take today\n5. Close with warmth and belief in them\n\nExample style (adapt to actual numbers): "Hey [Name]! 🌟 Last month you hit $506 in PQV and earned $9,300 — that is incredible!! You are currently at $38 PQV this month with your team at $32K volume. To hit Director this month you need 500 PQV — you are $462 away. That is totally doable if you reach out to your top 5 clients this week. Want me to write you a script to send them? 💪"\n\nWhen you do not have their Consultant ID, ask for it warmly.\nWhen they share it, immediately call stats to get the full picture.\nAlways write out scripts, posts, and messages in full so they can copy-paste immediately.';
+var TOOLS=[{name:'get_consultant_data',description:'Fetches live back office data for a consultant by their Display ID. Use data_type="stats" for the most complete view including current PQV, last month PQV, team volumes, pay rank, qualified stylists, and last month earnings. Use "qualifications" for rank/enrollment details, "metrics" for performance stats, "compensation" for full earnings breakdown.',input_schema:{type:'object',properties:{consultant_id:{type:'string',description:'The consultant Display ID number (e.g. "1042")'},data_type:{type:'string',enum:['qualifications','metrics','compensation','stats'],description:'Which data to fetch. "stats" is best for coaching.'}},required:['consultant_id','data_type']}}];
+async function runTool(name,input){try{if(name==='get_consultant_data'){if(!WORKER)return JSON.stringify({error:'Worker not configured'});var ep=(['qualifications','metrics','compensation','stats'].indexOf(input.data_type)>=0)?input.data_type:'stats';var r=await fetch(WORKER+'/'+ep+'?displayID='+encodeURIComponent(input.consultant_id));if(!r.ok){var err;try{err=await r.json();}catch(x){err={error:'HTTP '+r.status};}return JSON.stringify(err);}return JSON.stringify(await r.json());}return JSON.stringify({error:'Unknown tool: '+name});}catch(e){return JSON.stringify({error:e.message});}}
 var H=[];
 var msgs=document.getElementById('msgs');
 var inp=document.getElementById('inp');
 var btn=document.getElementById('btn');
-
 function add(cls,t){var d=document.createElement('div');d.className=cls;d.textContent=t;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;return d;}
-
-async function go(){
-  var t=inp.value.trim();
-  if(!t||btn.disabled)return;
-  inp.value='';
-  add('u',t);
-  H.push({role:'user',content:t});
-  var w=add('a','\u2736 thinking\u2026');
-  btn.disabled=true;
-  try{
-    var done=false;
-    while(!done){
-      var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':K,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1024,system:P,tools:TOOLS,messages:H})});
-      var d=await r.json();
-      if(d.error){w.textContent='\u26a0 '+d.error.message;done=true;break;}
-      if(d.stop_reason==='tool_use'){
-        H.push({role:'assistant',content:d.content});
-        var results=[];
-        for(var i=0;i<d.content.length;i++){var blk=d.content[i];if(blk.type==='tool_use'){w.textContent='\u2736 Looking up your data\u2026';results.push({type:'tool_result',tool_use_id:blk.id,content:await runTool(blk.name,blk.input)});}}
-        H.push({role:'user',content:results});
-      }else{
-        var txt=null;
-        if(d.content){for(var i=0;i<d.content.length;i++){if(d.content[i].type==='text'){txt=d.content[i].text;break;}}}
-        if(txt){w.textContent=txt;H.push({role:'assistant',content:d.content});}else{w.textContent='\u26a0 Unexpected response';}
-        done=true;
-      }
-    }
-  }catch(e){w.textContent='Error: '+e.message;}
-  btn.disabled=false;inp.focus();
-}
-
+async function go(){var t=inp.value.trim();if(!t||btn.disabled)return;inp.value='';add('u',t);H.push({role:'user',content:t});var w=add('a','✶ thinking…');btn.disabled=true;try{var done=false;while(!done){var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':K,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1024,system:P,tools:TOOLS,messages:H})});var d=await r.json();if(d.error){w.textContent='⚠ '+d.error.message;done=true;break;}if(d.stop_reason==='tool_use'){H.push({role:'assistant',content:d.content});var results=[];for(var i=0;i<d.content.length;i++){var blk=d.content[i];if(blk.type==='tool_use'){w.textContent='✶ Pulling your numbers…';results.push({type:'tool_result',tool_use_id:blk.id,content:await runTool(blk.name,blk.input)});}}H.push({role:'user',content:results});}else{var txt=null;if(d.content){for(var i=0;i<d.content.length;i++){if(d.content[i].type==='text'){txt=d.content[i].text;break;}}}if(txt){w.textContent=txt;H.push({role:'assistant',content:d.content});}else{w.textContent='⚠ Unexpected response';}done=true;}}}catch(e){w.textContent='Error: '+e.message;}btn.disabled=false;inp.focus();}
 btn.onclick=go;
 inp.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();go();}});
-add('a',"Hey! I\u2019m Jackie \u2014 your virtual upline, available 24/7.\n\nAsk me for prospecting scripts, social media posts, product language, or help hitting your next rank. I can also pull your live back office data \u2014 just share your Consultant ID and I\u2019ll look up your stats! What do you need today?");
+add('a',"Hey! I'm Jackie — your virtual upline, available 24/7. 🌟\n\nShare your Consultant ID and I'll pull up your live numbers — I can tell you exactly where you are this month, what you closed last month, and what it'll take to hit your next rank. I can also write you prospecting scripts, social posts, or product language ready to copy and paste.\n\nWhat do you need today?");
 inp.focus();
 </script>
 </body>
