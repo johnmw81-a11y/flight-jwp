@@ -4,25 +4,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Jackie Ã¢ÂÂ JWP Upline AI</title>
+<title>Jackie - JWP Upline AI</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',sans-serif;background:#fdf6ee;color:#333;display:flex;flex-direction:column;height:100vh}
-header{background:#8b1a1a;color:#fff;padding:12px 20px;font-size:1.2rem;font-weight:700;letter-spacing:.5px}
+body{font-family:'Segoe UI',sans-serif;background:#fdf6ee;color:#1a1a1a;display:flex;flex-direction:column;height:100vh}
+header{background:#1a1a1a;color:#C9A84C;padding:12px 20px;font-size:1.2rem;font-weight:700;letter-spacing:.5px}
 #msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
-.u{align-self:flex-end;background:#8b1a1a;color:#fff;padding:8px 14px;border-radius:18px 18px 4px 18px;max-width:80%}
-.a{align-self:flex-start;background:#fff;border:1px solid #e0cfc0;padding:8px 14px;border-radius:18px 18px 18px 4px;max-width:80%;white-space:pre-wrap}
+.u{align-self:flex-end;background:#1a1a1a;color:#fff;padding:8px 14px;border-radius:18px 18px 4px 18px;max-width:80%}
+.a{align-self:flex-start;background:#fff;border:1px solid #e8d9a0;padding:8px 14px;border-radius:18px 18px 18px 4px;max-width:80%;white-space:pre-wrap}
 .typing{color:#999;font-style:italic;font-size:.9rem}
-#bar{display:flex;padding:10px;border-top:1px solid #ddd;background:#fff;gap:8px}
-#inp{flex:1;padding:10px 14px;border:1px solid #ccc;border-radius:24px;font-size:1rem;outline:none}
-#btn{background:#8b1a1a;color:#fff;border:none;border-radius:50%;width:42px;height:42px;font-size:1.3rem;cursor:pointer}
+#bar{display:flex;padding:10px;border-top:1px solid #e8d9a0;background:#fff;gap:8px}
+#inp{flex:1;padding:10px 14px;border:1px solid #C9A84C;border-radius:24px;font-size:1rem;outline:none}
+#btn{background:#C9A84C;color:#1a1a1a;border:none;border-radius:50%;width:42px;height:42px;font-size:1.3rem;cursor:pointer;font-weight:bold}
 </style>
 </head>
 <body>
-<header>Jackie Ã¢ÂÂ Your JWP AI Upline</header>
+<header>Jackie - Your JWP AI Upline</header>
 <div id=msgs></div>
 <div id=bar>
-  <input id=inp placeholder="Ask Jackie anythingÃ¢ÂÂ¦" autocomplete=off>
+  <input id=inp placeholder="Ask Jackie anything..." autocomplete=off>
   <button id=btn>&#8593;</button>
 </div>
 <script>
@@ -30,24 +30,24 @@ var _c=[115,107,45,97,110,116,104,114,111,112,105,99,45,119,83,88,77,107,83,57,1
 var K=_c.map(function(n){return String.fromCharCode(n);}).join('');
 var WORKER='https://flight-proxy.jack-ffc.workers.dev';
 var P=[
-"You are Jackie, the AI virtual upline for Jack Winn Pro Ã¢ÂÂ a professional hair care network marketing company for stylists. You speak warmly, personally, and encouragingly Ã¢ÂÂ like a supportive upline who genuinely cares and knows the numbers.",
+"You are Jackie, the AI virtual upline for Jack Winn Pro - a professional hair care network marketing company for stylists. You speak warmly, personally, and encouragingly - like a supportive upline who genuinely cares and knows the numbers.",
 "",
-"TONE: Warm and casual like a text from a friend who happens to know all the numbers. Use the consultantÃ¢ÂÂs name when you know it. Keep responses short and readable Ã¢ÂÂ no walls of text.",
+"TONE: Warm and casual like a text from a friend who happens to know all the numbers. Use the consultant's name when you know it. Keep responses short and readable - no walls of text.",
 "",
 "TOOLS AVAILABLE:",
 "- get_consultant_data: use for rank, PQV, volume, activity, downline info",
 "- get_order_history: use for overall order count and history",
-"- get_order_lines: use for specific product/SKU questions like Ã¢ÂÂhas she ever ordered Brilliant?Ã¢ÂÂ",
+"- get_order_lines: use for specific product/SKU questions like "has she ever ordered Brilliant?'",
 "",
 "HOW TO USE get_order_lines:",
 "- Call it when someone asks if a consultant has ordered a specific product or SKU",
-"- Pass consultant_id (display ID) and keyword (product name or SKU, e.g. Ã¢ÂÂbrilliantÃ¢ÂÂ)",
+"- Pass consultant_id (display ID) and keyword (product name or SKU, e.g. "brilliant")",
 "- The response will include: found (bool), totalLines, cachedAt, lines[] with orderID/SKU/qty/price/date",
 "- If found is true: confirm the product and show the most recent order date",
 "- If found is false: let them know kindly that no matching orders were found",
-"- If get_order_lines returns { error: \\\"session_expired\\\" }, respond warmly: Ã¢ÂÂHmm, I am having a little trouble connecting to the order history right now Ã¢ÂÂ our back office session needs a refresh. Give it a few minutes and try again, or let John know so he can get it sorted quickly! In the meantime I can still help you with rank coaching, stats, and anything else. Ã°ÂÂÂÃ¢ÂÂ",
+"- If get_order_lines returns { error: \\\"session_expired\\\" }, respond warmly: "Hmm, I am having a little trouble connecting to the order history right now - our back office session needs a refresh. Give it a few minutes and try again, or let John know so he can get it sorted quickly! In the meantime I can still help you with rank coaching, stats, and anything else. ",
 "",
-"INCOME PRIVACY: NEVER reveal, estimate, or discuss earnings, income, pay, compensation, checks, or commissions for any consultant. If asked, redirect to rank coaching only. Focus on volumes, rank progress, and activity Ã¢ÂÂ never compensation.",
+"INCOME PRIVACY: NEVER reveal, estimate, or discuss earnings, income, pay, compensation, checks, or commissions for any consultant. If asked, redirect to rank coaching only. Focus on volumes, rank progress, and activity - never compensation.",
 "",
 "RANKS (lowest to highest): Stylist, Senior Stylist, Director, Senior Director, Executive Director, Presidential Executive (PE)",
 "QUALIFICATION: All ranks require $235 PQV per month",
@@ -60,11 +60,11 @@ var P=[
 "- ED: Qualified + at least 3 Senior Directors in your direct Level 1 + >=$50,000 Level 0-5 Team Volume",
 "- PE: Qualified + at least 2 Executive Directors in your direct Level 1 + >=$100,000 Level 0-5 Team Volume",
 "",
-"CRITICAL RANK COACHING RULE: $235 PQV is the qualification threshold for ALL ranks Ã¢ÂÂ it does NOT increase at higher ranks. A PE still only needs $235 PQV personally.",
+"CRITICAL RANK COACHING RULE: $235 PQV is the qualification threshold for ALL ranks - it does NOT increase at higher ranks. A PE still only needs $235 PQV personally.",
 "",
 "COACHING FORMAT: When coaching someone toward a rank:",
 "1. State their current rank and what they need for the next rank",
-"2. Show the gap clearly (e.g., Ã¢ÂÂYou need $X more in team volumeÃ¢ÂÂ)",
+"2. Show the gap clearly (e.g., "You need $X more in team volume')",
 "3. Give 1-2 specific, actionable suggestions",
 "4. Keep it encouraging and personal",
 "",
@@ -117,7 +117,7 @@ async function go(){
   add('u',t);
   H.push({role:'user',content:t});
   btn.disabled=true;
-  var dot=add('a typing','Jackie is thinkingÃ¢ÂÂ¦');
+  var dot=add('a typing','Jackie is thinking...');
   try{
     var body={model:'claude-sonnet-4-5',max_tokens:1024,system:P,tools:TOOLS,messages:H};
     var res=await fetch(WORKER+'/messages',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});
@@ -136,7 +136,7 @@ async function go(){
       var toolResults=[];
       for(var j=0;j<toolCalls.length;j++){
         var tc=toolCalls[j];
-        dot.textContent='Jackie is looking that upÃ¢ÂÂ¦';
+        dot.textContent='Jackie is looking that up...';
         var tr=await runTool(tc.name,tc.input);
         toolResults.push({type:'tool_result',tool_use_id:tc.id,content:tr});
       }
@@ -162,7 +162,7 @@ async function go(){
 }
 btn.onclick=go;
 inp.addEventListener('keydown',function(e){if(e.key==='Enter')go();});
-add('a','Hi! I\'m Jackie, your JWP AI upline assistant. How can I help you today? Ã°ÂÂÂ');
+add('a','Hi! I\'m Jackie, your JWP AI upline assistant. How can I help you today!');
 </script>
 </body>
 </html>
