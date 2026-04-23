@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Jackie – JWP Upline AI</title>
+<title>Jackie â JWP Upline AI</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',sans-serif;background:#fdf6ee;color:#333;display:flex;flex-direction:column;height:100vh}
@@ -18,10 +18,10 @@ header{background:#8b1a1a;color:#fff;padding:12px 20px;font-size:1.2rem;font-wei
 </style>
 </head>
 <body>
-<header>Jackie – Your JWP AI Upline</header>
+<header>Jackie â Your JWP AI Upline</header>
 <div id=msgs></div>
 <div id=bar>
-  <input id=inp placeholder="Ask Jackie anything…" autocomplete=off>
+  <input id=inp placeholder="Ask Jackie anythingâ¦" autocomplete=off>
   <button id=btn>&#8593;</button>
 </div>
 <script>
@@ -29,24 +29,24 @@ var _c=[115,107,45,97,110,116,104,114,111,112,105,99,45,119,83,88,77,107,83,57,1
 var K=_c.map(function(n){return String.fromCharCode(n);}).join('');
 var WORKER='https://flight-proxy.jack-ffc.workers.dev';
 var P=[
-"You are Jackie, the AI virtual upline for Jack Winn Pro — a professional hair care network marketing company for stylists. You speak warmly, personally, and encouragingly — like a supportive upline who genuinely cares and knows the numbers.",
+"You are Jackie, the AI virtual upline for Jack Winn Pro â a professional hair care network marketing company for stylists. You speak warmly, personally, and encouragingly â like a supportive upline who genuinely cares and knows the numbers.",
 "",
-"TONE: Warm and casual like a text from a friend who happens to know all the numbers. Use the consultant’s name when you know it. Keep responses short and readable — no walls of text.",
+"TONE: Warm and casual like a text from a friend who happens to know all the numbers. Use the consultantâs name when you know it. Keep responses short and readable â no walls of text.",
 "",
 "TOOLS AVAILABLE:",
 "- get_consultant_data: use for rank, PQV, volume, activity, downline info",
 "- get_order_history: use for overall order count and history",
-"- get_order_lines: use for specific product/SKU questions like ‘has she ever ordered Brilliant?’",
+"- get_order_lines: use for specific product/SKU questions like âhas she ever ordered Brilliant?â",
 "",
 "HOW TO USE get_order_lines:",
 "- Call it when someone asks if a consultant has ordered a specific product or SKU",
-"- Pass consultant_id (display ID) and keyword (product name or SKU, e.g. “brilliant”)",
+"- Pass consultant_id (display ID) and keyword (product name or SKU, e.g. âbrilliantâ)",
 "- The response will include: found (bool), totalLines, cachedAt, lines[] with orderID/SKU/qty/price/date",
 "- If found is true: confirm the product and show the most recent order date",
 "- If found is false: let them know kindly that no matching orders were found",
-"- If get_order_lines returns { error: \\\"session_expired\\\" }, respond warmly: ‘Hmm, I am having a little trouble connecting to the order history right now — our back office session needs a refresh. Give it a few minutes and try again, or let John know so he can get it sorted quickly! In the meantime I can still help you with rank coaching, stats, and anything else. 💛’",
+"- If get_order_lines returns { error: \\\"session_expired\\\" }, respond warmly: âHmm, I am having a little trouble connecting to the order history right now â our back office session needs a refresh. Give it a few minutes and try again, or let John know so he can get it sorted quickly! In the meantime I can still help you with rank coaching, stats, and anything else. ðâ",
 "",
-"INCOME PRIVACY: NEVER reveal, estimate, or discuss earnings, income, pay, compensation, checks, or commissions for any consultant. If asked, redirect to rank coaching only. Focus on volumes, rank progress, and activity — never compensation.",
+"INCOME PRIVACY: NEVER reveal, estimate, or discuss earnings, income, pay, compensation, checks, or commissions for any consultant. If asked, redirect to rank coaching only. Focus on volumes, rank progress, and activity â never compensation.",
 "",
 "RANKS (lowest to highest): Stylist, Senior Stylist, Director, Senior Director, Executive Director, Presidential Executive (PE)",
 "QUALIFICATION: All ranks require $235 PQV per month",
@@ -59,11 +59,11 @@ var P=[
 "- ED: Qualified + at least 3 Senior Directors in your direct Level 1 + >=$50,000 Level 0-5 Team Volume",
 "- PE: Qualified + at least 2 Executive Directors in your direct Level 1 + >=$100,000 Level 0-5 Team Volume",
 "",
-"CRITICAL RANK COACHING RULE: $235 PQV is the qualification threshold for ALL ranks — it does NOT increase at higher ranks. A PE still only needs $235 PQV personally.",
+"CRITICAL RANK COACHING RULE: $235 PQV is the qualification threshold for ALL ranks â it does NOT increase at higher ranks. A PE still only needs $235 PQV personally.",
 "",
 "COACHING FORMAT: When coaching someone toward a rank:",
 "1. State their current rank and what they need for the next rank",
-"2. Show the gap clearly (e.g., ‘You need $X more in team volume’)",
+"2. Show the gap clearly (e.g., âYou need $X more in team volumeâ)",
 "3. Give 1-2 specific, actionable suggestions",
 "4. Keep it encouraging and personal",
 "",
@@ -116,10 +116,10 @@ async function go(){
   add('u',t);
   H.push({role:'user',content:t});
   btn.disabled=true;
-  var dot=add('a typing','Jackie is thinking…');
+  var dot=add('a typing','Jackie is thinkingâ¦');
   try{
     var body={model:'claude-sonnet-4-5',max_tokens:1024,system:P,tools:TOOLS,messages:H};
-    var res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':K,'anthropic-version':'2023-06-01','anthropic-beta':'interleaved-thinking-2025-05-14','content-type':'application/json'},body:JSON.stringify(body)});
+    var res=await fetch(WORKER+'/messages',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});
     var data=await res.json();
     var reply='';
     var toolCalls=[];
@@ -135,13 +135,13 @@ async function go(){
       var toolResults=[];
       for(var j=0;j<toolCalls.length;j++){
         var tc=toolCalls[j];
-        dot.textContent='Jackie is looking that up…';
+        dot.textContent='Jackie is looking that upâ¦';
         var tr=await runTool(tc.name,tc.input);
         toolResults.push({type:'tool_result',tool_use_id:tc.id,content:tr});
       }
       H.push({role:'user',content:toolResults});
       var body2={model:'claude-sonnet-4-5',max_tokens:1024,system:P,tools:TOOLS,messages:H};
-      var res2=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':K,'anthropic-version':'2023-06-01','anthropic-beta':'interleaved-thinking-2025-05-14','content-type':'application/json'},body:JSON.stringify(body2)});
+      var res2=await fetch(WORKER+'/messages',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body2)});
       var data2=await res2.json();
       reply='';
       if(data2.content){
@@ -161,7 +161,7 @@ async function go(){
 }
 btn.onclick=go;
 inp.addEventListener('keydown',function(e){if(e.key==='Enter')go();});
-add('a','Hi! I\'m Jackie, your JWP AI upline assistant. How can I help you today? 💛');
+add('a','Hi! I\'m Jackie, your JWP AI upline assistant. How can I help you today? ð');
 </script>
 </body>
 </html>
