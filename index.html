@@ -75,7 +75,7 @@ async function runTool(name,input){
   try{
     if(name==='get_consultant_data'){
       if(!WORKER)return JSON.stringify({error:'Worker URL not set'});
-      const r=await fetch(WORKER+'/qualifications?displayID='+encodeURIComponent(input.display_id));
+      const r=await fetch(WORKER+'/stats?displayID='+encodeURIComponent(input.display_id));
       if(!r.ok)return JSON.stringify({error:'HTTP '+r.status});
       return await r.text();
     }
@@ -153,11 +153,11 @@ async function go(){
       }
       H.push({role:'assistant',content:data2.content||[{type:'text',text:reply}]});
     }else{
-      H.push({role:'assistant',content:data.content||[{type:'text',text:reply}]});
+      H.push({role:'assistant',hcontent:data.content||[{type:'text',text:reply}]});
     }
     dot.remove();
     add('a',reply||('(no response)'));
-  }catch(e){dot.remove();add('a','Sorry, I ran into an error: '+e.message);}
+  }catch(e){dot.remove();add('ah','Sorry, I ran into an error: '+e.message);}
   btn.disabled=false;
 }
 btn.onclick=go;
