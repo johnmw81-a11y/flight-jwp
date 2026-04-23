@@ -75,7 +75,7 @@ async function runTool(name,input){
   try{
     if(name==='get_consultant_data'){
       if(!WORKER)return JSON.stringify({error:'Worker URL not set'});
-      const r=await fetch(WORKER+'/consultant?displayID='+encodeURIComponent(input.display_id));
+      const r=await fetch(WORKER+'/qualifications?displayID='+encodeURIComponent(input.display_id));
       if(!r.ok)return JSON.stringify({error:'HTTP '+r.status});
       return await r.text();
     }
@@ -87,7 +87,7 @@ async function runTool(name,input){
     }
     if(name==='get_order_lines'){
       if(!WORKER)return JSON.stringify({error:'Worker URL not set'});
-      let u=WORKER+'/order-lines?displayID='+encodeURIComponent(input.consultant_id);
+      let u=WORKER+'/orders?displayID='+encodeURIComponent(input.consultant_id);
       if(input.keyword)u+='&keyword='+encodeURIComponent(input.keyword);
       const r=await fetch(u);
       const j=await r.json();
