@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Jackie - JWP Upline AI</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+*{box-sizing:border-box;margin:0;padding:0}h
 body{font-family:'Segoe UI',sans-serif;background:#fdf6ee;color:#1a1a1a;display:flex;flex-direction:column;height:100vh}
 header{background:#1a1a1a;color:#C9A84C;padding:12px 20px;font-size:1.2rem;font-weight:700;letter-spacing:.5px}
 #msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
@@ -36,6 +36,13 @@ var P=[
 "",
 "TOOLS AVAILABLE:",
 "- get_consultant_data: use for rank, PQV, volume, activity, downline info",
+  "",
+  "HOW TO READ get_consultant_data RESPONSE:",
+  "- The response includes the consultant name, rank/currentRank (their active rank title), pqv or personalVolume, and team volume fields (teamVolume, level0Volume, level1Volume, etc.)",
+  "- If rank is returned as a number or code, map it: 1=Stylist, 2=Senior Stylist, 3=Director, 4=Senior Director, 5=Executive Director, 6=Presidential Executive (PE)",
+  "- ALWAYS report the consultant's rank by its full name - never say a number or code",
+  "- Cross-check: a consultant qualifies for a rank only if their PQV >= $235 AND they meet the team volume and leg requirements for that rank. If the data shows a rank that does not match their volumes, trust the volumes and flag the discrepancy",
+  "- If the rank field is missing or unclear, derive rank from the volume data using the RANK REQUIREMENTS section below",
 "- get_order_history: use for overall order count and history",
 "- get_order_lines: use for specific product/SKU questions like \"has she ever ordered Brilliant?\"",
 "",
@@ -153,7 +160,7 @@ async function go(){
       }
       H.push({role:'assistant',content:data2.content||[{type:'text',text:reply}]});
     }else{
-      H.push({role:'assistant',hcontent:data.content||[{type:'text',text:reply}]});
+      H.push({role:'assistant',content:data.content||[{type:'text',text:reply}]});
     }
     dot.remove();
     add('a',reply||('(no response)'));
